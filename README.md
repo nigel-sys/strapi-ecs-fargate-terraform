@@ -14,7 +14,41 @@ git clone https://github.com/strapi/strapi
 cd strapi
 ```
 
-## Install Dependencies
+## Installation with Docker
+
+Make sure you have Docker and Docker Compose installed on your machine.
+
+### Build the Docker Container
+
+```bash
+docker-compose build
+```
+
+### Run the Docker Container
+
+```bash
+docker-compose up -d
+```
+
+Access Strapi at: http://localhost:8080/admin
+
+### To Stop or Re-run the container
+
+Open another terminal and run:
+
+```bash
+docker-compose stop
+```
+
+To re-run the container:
+
+```bash
+docker-compose up -d
+```
+
+## Installation without using Docker
+
+### Install Dependencies
 
 Strapi uses Yarn, so install all dependencies with:
 
@@ -22,7 +56,7 @@ Strapi uses Yarn, so install all dependencies with:
 yarn install
 ```
 
-## Run Strapi Locally
+### Run Strapi Locally
 
 Start the development server:
 
