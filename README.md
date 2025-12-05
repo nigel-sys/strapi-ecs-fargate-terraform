@@ -1,129 +1,123 @@
-# Strapi Local Setup — Task Documentation
+# Strapi Local Setup --- Task Documentation
 
-This README documents all the steps followed to clone the Strapi repository, run it locally, create a sample content type, and push the setup to a personal GitHub repository.
+This README documents all the steps followed to clone the Strapi repository, set up the development environment using Docker, run it locally with Postgres and Nginx, create a sample content type, and push the setup to a personal GitHub repository.
+
+---
 
 ## Clone the Strapi Repository
 
-```bash
-git clone https://github.com/strapi/strapi
-```
+`git clone https://github.com/strapi/strapi`
 
 ## Move into the project directory:
 
-```bash
-cd strapi
-```
+`cd strapi`
 
-## Installation with Docker
+---
 
-Make sure you have Docker and Docker Compose installed on your machine.
+## Docker Setup (Strapi + Postgres + Nginx)
 
-### Build the Docker Container
+Make sure you have **Docker** and **Docker Compose** installed.
 
-```bash
-docker-compose build
-```
+### 1\. Build the Docker Containers
 
-### Run the Docker Container
+`docker-compose build`
 
-```bash
-docker-compose up -d
-```
+### 2\. Run the Docker Containers
 
-Access Strapi at: http://localhost:8080/admin
+`docker-compose up -d`
 
-### To Stop or Re-run the container
+This will start three containers:
 
-Open another terminal and run:
+1.  **Strapi** --- CMS server (internal port 1337)
 
-```bash
-docker-compose stop
-```
+2.  **Postgres** --- database (internal port 5432)
 
-To re-run the container:
+3.  **Nginx** --- reverse proxy mapping host port 80 → Strapi
 
-```bash
-docker-compose up -d
-```
+> All containers are connected to a **custom Docker network** `strapi-net`, allowing them to communicate internally by container name.
 
-## Installation without using Docker
+### 3\. Verify Docker Network (Optional)
 
-### Install Dependencies
+`docker network inspect strapi-net`
 
-Strapi uses Yarn, so install all dependencies with:
+This will show all three containers connected to the same network.
 
-```bash
-yarn install
-```
+---
 
-### Run Strapi Locally
+## Access Strapi
 
-Start the development server:
+Open your browser at:
 
-```bash
-yarn develop
-```
+`http://localhost/admin`
 
-This will:
+> Nginx forwards requests from host port 80 to Strapi. You do **not** need to map Strapi directly to a host port.
 
-Build the admin panel and Start Strapi on: http://localhost:8080/admin
+---
+
+## Stop or Re-run Containers
+
+Stop containers:
+
+`docker-compose stop`
+
+Re-run containers:
+
+`docker-compose up -d`
+
+---
 
 ## Start the Admin Panel
 
-Once the server is started, open: http://localhost:8080/admin
+Once the server is started, open:
+
+`http://localhost/admin`
 
 You will be prompted to create the first admin user.
 
+---
+
 ## Create a Sample Content Type
 
-Go to Content-Type Builder in the admin panel.
+1.  Go to **Content-Type Builder** in the admin panel.
 
-Click Create new collection type.
+2.  Click **Create new collection type**.
 
-- Name it (example): demo
+3.  Name it (example): `demo`
 
-Add fields such as:
+4.  Add fields such as:
 
-- title
+    - `title`
 
-- content
+    - `content`
 
-- published
+    - `published`
 
-Save and let Strapi restart.
+5.  Save --- Strapi will restart automatically.
 
-Go to Content Manager and create an entry.
+6.  Go to **Content Manager** and create an entry.
+
+---
 
 ## Push the Setup to Your GitHub Repository
 
 Initialize Git (if not already):
 
-```bash
-git init
-```
+`git init`
 
 Add remote:
 
-```bash
-git remote add origin https://github.com/<your-username>/<your-repo>.git
-```
+`git remote add origin https://github.com/<your-username>/<your-repo>.git`
 
 Add all files:
 
-```bash
-git add .
-```
+`git add .`
 
 Commit:
 
-```bash
-git commit -m "Initial Strapi setup"
-```
+`git commit -m "Initial Strapi setup with Docker, Postgres, Nginx, and custom network"`
 
 Push:
 
-```bash
-git push -u origin main
-```
+`git push -u origin main`
 
 Replace `<your-username>` and `<your-repo>` with your actual GitHub username and repository name.
