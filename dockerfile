@@ -19,6 +19,6 @@ COPY . .
 
 RUN ["yarn", "build"]
 
-EXPOSE 8080
+EXPOSE 1337
 
 CMD ["yarn", "develop"]
