@@ -6,11 +6,15 @@ This README documents all the steps followed to clone the Strapi repository, set
 
 ## Clone the Strapi Repository
 
-`git clone https://github.com/strapi/strapi`
+```bash
+git clone https://github.com/strapi/strapi
+```
 
 ## Move into the project directory:
 
-`cd strapi`
+```bash
+cd strapi
+```
 
 ---
 
@@ -20,11 +24,15 @@ Make sure you have **Docker** and **Docker Compose** installed.
 
 ### 1\. Build the Docker Containers
 
-`docker-compose build`
+```bash
+docker-compose build
+```
 
 ### 2\. Run the Docker Containers
 
-`docker-compose up -d`
+```bash
+docker-compose up -d
+```
 
 This will start three containers:
 
@@ -38,7 +46,9 @@ This will start three containers:
 
 ### 3\. Verify Docker Network (Optional)
 
-`docker network inspect strapi-net`
+```bash
+docker network inspect strapi-net
+```
 
 This will show all three containers connected to the same network.
 
@@ -50,19 +60,21 @@ Open your browser at:
 
 `http://localhost/admin`
 
-> Nginx forwards requests from host port 80 to Strapi. You do **not** need to map Strapi directly to a host port.
-
 ---
 
 ## Stop or Re-run Containers
 
 Stop containers:
 
-`docker-compose stop`
+```bash
+docker-compose stop
+```
 
 Re-run containers:
 
-`docker-compose up -d`
+```bash
+docker-compose up -d
+```
 
 ---
 
@@ -102,22 +114,32 @@ You will be prompted to create the first admin user.
 
 Initialize Git (if not already):
 
-`git init`
+```bash
+git init
+```
 
 Add remote:
 
-`git remote add origin https://github.com/<your-username>/<your-repo>.git`
+```bash
+git remote add origin https://github.com/<your-username>/<your-repo>.git
+```
 
 Add all files:
 
-`git add .`
+```bash
+git add .
+```
 
 Commit:
 
-`git commit -m "Initial Strapi setup with Docker, Postgres, Nginx, and custom network"`
+```bash
+git commit -m "Initial Strapi setup with Docker, Postgres, Nginx, and custom network"
+```
 
 Push:
 
-`git push -u origin main`
+```bash
+git push -u origin main
+```
 
 Replace `<your-username>` and `<your-repo>` with your actual GitHub username and repository name.
