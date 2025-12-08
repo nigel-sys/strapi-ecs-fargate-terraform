@@ -39,7 +39,7 @@ The following table highlights the key differences between Virtual Machines (VMs
 | Portability    | Less portable due to OS dependencies  | Highly portable across environments |
 | Performance    | Slower due to virtualization overhead | Near-native performance             |
 
-![VMvsDocker](https://github.com/PearlThoughtsInternship/Pipeline-Masters/tree/pratyush_nigel_baxla/VMvsDocker.drawio.png)
+![VMvsDocker](https://github.com/PearlThoughtsInternship/Pipeline-Masters/blob/pratyush_nigel_baxla/VMvsDocker.drawio.png)
 
 ## Docker Architecture
 
@@ -52,7 +52,7 @@ Docker's architecture consists of several key components:
 - **Docker Containers**: Lightweight, portable, and self-sufficient units that run applications based on Docker images.
 - **Docker Registry**: A storage and distribution system for Docker images. Docker Hub is a popular public registry.
 
-![Docker Architecture](https://github.com/PearlThoughtsInternship/Pipeline-Masters/tree/pratyush_nigel_baxla/DockerArchitecture.png)
+![Docker Architecture](https://github.com/PearlThoughtsInternship/Pipeline-Masters/blob/pratyush_nigel_baxla/DockerArchitecture.png)
 
 ## Dockerfile Deep Dive
 
