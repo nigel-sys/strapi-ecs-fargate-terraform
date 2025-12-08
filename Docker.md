@@ -23,6 +23,7 @@ Docker is an open-source platform that automates the deployment, scaling, and ma
 Docker addresses several challenges in software development and deployment:
 
 - **Environment Consistency**: Docker ensures that applications run the same way in development, testing, and production environments by packaging all dependencies within containers.
+- **Automation**: Docker automates the deployment process, reducing manual intervention and minimizing errors.
 - **Resource Efficiency**: Containers share the host OS kernel, making them more lightweight and efficient than traditional virtual machines.
 - **Scalability**: Docker makes it easy to scale applications up or down by adding or removing containers as needed.
 - **Isolation**: Each container runs in its own isolated environment, preventing conflicts between applications and improving security.
@@ -56,51 +57,52 @@ Docker's architecture consists of several key components:
 
 ## Dockerfile Deep Dive
 
-A Dockerfile is a text file that contains a series of instructions to build a Docker image. Here is the step-by-step explaination of my Dockerfile:
+A Dockerfile is a text file that contains a series of instructions to build a Docker image. Instead of running all the commands/instructions manually one-by-one, Dockerfile make it so that we can automate and run all the instructions back-to-back. This makes docker, a very beneficial tool for DevOps engineers.
+The following is the step-by-step explaination of my Dockerfile:
 
 ```bash
-### Uses a lightweight Node.js 22 image (Alpine Linux) as the base.
+#Uses a lightweight Node.js 22 image (Alpine Linux) as the base.
 FROM node:22-alpine
 
-### Installs system packages needed for Strapi plugins like sharp, which processes images.
+# Installs system packages needed for Strapi plugins like sharp, which processes images.
 RUN apk update && apk add --no-cache build-base gcc autoconf automake zlib-dev libpng-dev nasm bash vips-dev git
-### Sets the NODE_ENV environment variable to 'development' by default.
+# Sets the NODE_ENV environment variable to 'development' by default.
 ARG NODE_ENV=development
 ENV NODE_ENV=${NODE_ENV}
 
-### Setting the working directory inside the container
+# Setting the working directory inside the container
 WORKDIR /opt/app
 
-### Copying package.json and yarn.lock
+# Copying package.json and yarn.lock
 To install the dependencies and improves caching as the dependenices only reinstall when these files change:
 COPY package.json yarn.lock ./
 
-### Installs node-gyp globally.
+#Installs node-gyp globally.
 Some Strapi plugins (like image processing) require extra system tools to build
 RUN yarn global add node-gyp
 
-### Installs project dependencies with an increased network timeout to handle slow connections.
+# Installs project dependencies with an increased network timeout to handle slow connections.
 RUN yarn config set network-timeout 600000 -g && yarn install
 
-### Adds the node_modules/.bin directory to the PATH environment variable for easier access to binaries.
+# Adds the node_modules/.bin directory to the PATH environment variable for easier access to binaries.
 ENV PATH=/opt/node_modules/.bin:$PATH
 
 # Copying the full application
 COPY . .
 
-### Builds the Strapi application.
+# Builds the Strapi application.
 RUN ["yarn", "build"]
 
-### Exposes port 1337 for the Strapi application.
+# Exposes port 1337 for the Strapi application.
 EXPOSE 1337
 
-### Sets the default command to start the Strapi application in development mode.
+# Sets the default command to start the Strapi application in development mode.
 CMD ["yarn", "develop"]
 ```
 
 ## Key Docker Commands
 
-Here are some essential Docker commands for managing containers and images:
+The following are some essential Docker commands for managing containers and images:
 
 - `docker build -t <image_name> .` : Builds a Docker image from a Dockerfile in the current directory, tagging it with the specified name.
 - `docker run -d -p <host_port>:<container_port> <image_name>` : Runs a container in detached mode, mapping host port to container port.
