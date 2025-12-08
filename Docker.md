@@ -39,8 +39,7 @@ The following table highlights the key differences between Virtual Machines (VMs
 | Portability    | Less portable due to OS dependencies  | Highly portable across environments |
 | Performance    | Slower due to virtualization overhead | Near-native performance             |
 
-![alt text][VMvsDocker]
-[VMvsDocker]: https://github.com/PearlThoughtsInternship/Pipeline-Masters/tree/pratyush_nigel_baxla/VMvsDocker.drawio.png "Virtual Machine vs Docker"
+![VMvsDocker](https://github.com/PearlThoughtsInternship/Pipeline-Masters/tree/pratyush_nigel_baxla/VMvsDocker.drawio.png)
 
 ## Docker Architecture
 
@@ -53,8 +52,7 @@ Docker's architecture consists of several key components:
 - **Docker Containers**: Lightweight, portable, and self-sufficient units that run applications based on Docker images.
 - **Docker Registry**: A storage and distribution system for Docker images. Docker Hub is a popular public registry.
 
-![alt text][Docker Architecture]
-[Docker Architecture]: https://github.com/PearlThoughtsInternship/Pipeline-Masters/tree/pratyush_nigel_baxla/DockerArchitecture.png "Docker Architecture"
+![Docker Architecture](https://github.com/PearlThoughtsInternship/Pipeline-Masters/tree/pratyush_nigel_baxla/DockerArchitecture.png)
 
 ## Dockerfile Deep Dive
 
@@ -139,5 +137,3 @@ Docker Compose is a tool for defining and running multi-container Docker applica
 - `docker-compose ps` : Lists the containers managed by Docker Compose.
 - `docker-compose logs` : Fetches the logs of all containers defined in the Compose file.
 - `docker-compose build` : Builds or rebuilds services defined in the Compose file.
-
-This concludes the deep dive into Docker. For more information, refer to the [official Docker documentation](https://docs.docker.com/).
