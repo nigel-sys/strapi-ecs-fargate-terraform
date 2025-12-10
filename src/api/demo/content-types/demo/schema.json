@@ -16,6 +16,12 @@
     },
     "demotext2": {
       "type": "string"
+    },
+    "demotext3": {
+      "type": "string"
+    },
+    "Boolean": {
+      "type": "boolean"
     }
   }
 }

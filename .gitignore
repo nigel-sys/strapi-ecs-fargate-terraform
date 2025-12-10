@@ -130,3 +130,70 @@ build
 .strapi-updater.json
 .strapi-cloud.json
 
+############################
+# Terraform
+############################
+
+# Local .terraform directories
+**/.terraform/*
+.terraform*
+
+# Terraform state files
+terraform.tfstate
+terraform.tfstate.*
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Sensitive variable files
+*.tfvars
+*.tfvars.json
+terraform.tfvars
+secret.tfvars
+prod.tfvars
+dev.tfvars
+
+# Override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Plan files
+*.plan
+*.tfplan
+
+# Module directories 
+**/.terraform/modules
+
+# CLI configuration
+.terraformrc
+terraform.rc
+
+############################
+# keys
+############################
+
+# SSH private keys
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+*.pem
+*.key
+
+# Public keys (optional — usually safe to commit, but better to ignore if unsure)
+id_rsa.pub
+id_dsa.pub
+id_ecdsa.pub
+id_ed25519.pub
+*.pub
+
+# SSH known_hosts and configs (optional)
+known_hosts
+ssh_config
+
+
