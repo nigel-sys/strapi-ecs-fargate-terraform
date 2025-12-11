@@ -46,15 +46,9 @@ data "aws_ami" "latest_al2023" {
   }
 }
 
-resource "aws_key_pair" "strapi_key" {
-  key_name   = "strapi-tf-key"
-  public_key = file("strapi-tf-key.pub")
-}
-
 resource "aws_instance" "strapi_server" {
   ami           = data.aws_ami.latest_al2023.id
   instance_type = "t2.small"
-  key_name      = aws_key_pair.strapi_key.key_name
   vpc_security_group_ids = [aws_security_group.strapi_sg.id]
 
   user_data = templatefile("user_data.sh", {
