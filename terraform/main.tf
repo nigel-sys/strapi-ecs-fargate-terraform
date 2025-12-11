@@ -46,14 +46,14 @@ data "aws_ami" "latest_al2023" {
   }
 }
 
-resource "aws_key_pair" "pratyush_Baxla_key" {
-  key_name   = "pratyush_Baxla_key"
+resource "aws_key_pair" "pratyush_baxla_key" {
+  key_name   = "pratyush_baxla_key"
   public_key = file("${path.module}/strapi-tf-key.pub")
 }
 
 resource "aws_instance" "strapi_server" {
   ami           = data.aws_ami.latest_al2023.id
-  key_name = aws_key_pair.pratyush_key.key_name
+  key_name = aws_key_pair.pratyush_baxla_key.key_name
   instance_type = "t2.small"
   vpc_security_group_ids = [aws_security_group.strapi_sg.id]
 
