@@ -23,14 +23,16 @@ jobs:
         run: |
           gpg --quiet --batch --yes \
               --decrypt --passphrase="${{ secrets.TFVARS_PASSWORD }}" \
-              --output terraform.tfvars terraform.tfvars.gpg
+              --output terraform/terraform.tfvars terraform/terraform.tfvars.gpg
 
       - name: Set Docker Image Variable
         run: |
           echo "docker_image=301782007642.dkr.ecr.ap-south-1.amazonaws.com/pratyush_baxla/strapi-app:${{ github.event.inputs.image_tag }}" > dynamic.auto.tfvars
 
       - name: Terraform Init
-        run: terraform init
+        run: |
+          cd terraform
+          terraform init
 
       - name: Terraform Apply
         run: terraform apply -auto-approve \
