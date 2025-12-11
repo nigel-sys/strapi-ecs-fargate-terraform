@@ -30,7 +30,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: 301782007642.dkr.ecr.ap-south-1.amazonaws.com/strapi-app
+          images: 301782007642.dkr.ecr.ap-south-1.amazonaws.com/pratyush_baxla/strapi-app
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
