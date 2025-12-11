@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "aws_security_group" "strapi_sg_pratyush" {
-  name        = "strapi_sg_pratyush"
+  name_prefix = "strapi_sg_pratyush-"     # prevents duplicate name error
   description = "Allow SSH, Strapi port and HTTP"
 
   ingress {
@@ -21,12 +21,12 @@ resource "aws_security_group" "strapi_sg_pratyush" {
   }
 
   ingress {
-  description = "Allow HTTP"
-  from_port   = 80
-  to_port     = 80
-  protocol    = "tcp"
-  cidr_blocks = ["0.0.0.0/0"]
-}
+    description = "Allow HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
   egress {
     from_port   = 0
@@ -46,11 +46,42 @@ data "aws_ami" "latest_al2023" {
   }
 }
 
+resource "aws_iam_role" "ec2_role" {
+  name = "pratyush_strapi_ec2_role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [{
+      Action = "sts:AssumeRole",
+      Effect = "Allow",
+      Principal = {
+        Service = "ec2.amazonaws.com"
+      }
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "ecr_read_only" {
+  role       = aws_iam_role.ec2_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+}
+
+resource "aws_iam_role_policy_attachment" "ec2_ssm" {
+  role       = aws_iam_role.ec2_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+resource "aws_iam_instance_profile" "ec2_profile" {
+  name = "pratyush_strapi_ec2_profile"
+  role = aws_iam_role.ec2_role.name
+}
+
 resource "aws_instance" "strapi_server" {
-  ami = data.aws_ami.latest_al2023.id
-  key_name = "pratyush_baxla_key"
-  instance_type = "t2.small"
+  ami                    = data.aws_ami.latest_al2023.id
+  key_name               = "pratyush_baxla_key"
+  instance_type          = "t2.small"
   vpc_security_group_ids = [aws_security_group.strapi_sg_pratyush.id]
+  iam_instance_profile   = aws_iam_instance_profile.ec2_profile.name
 
   user_data = templatefile("user_data.sh", {
     APP_KEYS            = var.APP_KEYS
@@ -58,14 +89,11 @@ resource "aws_instance" "strapi_server" {
     ADMIN_JWT_SECRET    = var.ADMIN_JWT_SECRET
     TRANSFER_TOKEN_SALT = var.TRANSFER_TOKEN_SALT
     ENCRYPTION_KEY      = var.ENCRYPTION_KEY
-
     DATABASE_HOST       = var.DATABASE_HOST
     DATABASE_NAME       = var.DATABASE_NAME
     DATABASE_USERNAME   = var.DATABASE_USERNAME
     DATABASE_PASSWORD   = var.DATABASE_PASSWORD
-
     JWT_SECRET          = var.JWT_SECRET
-
     docker_image        = var.docker_image
   })
 
