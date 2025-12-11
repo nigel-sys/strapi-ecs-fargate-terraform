@@ -1,0 +1,38 @@
+name: Deploy Terraform
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Image tag to deploy'
+        required: true
+        default: 'latest'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Decrypt tfvars
+        run: |
+          gpg --quiet --batch --yes \
+              --decrypt --passphrase="${{ secrets.TFVARS_PASSWORD }}" \
+              --output production.tfvars production.tfvars.gpg
+
+      - name: Set Docker Image Variable
+        run: |
+          echo "docker_image=301782007642.dkr.ecr.ap-south-1.amazonaws.com/strapi-app:${{ github.event.inputs.image_tag }}" > dynamic.auto.tfvars
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve \
+          -var-file="production.tfvars" \
+          -var-file="dynamic.auto.tfvars"
