@@ -32,6 +32,10 @@ DATABASE_SSL_REJECT_UNAUTHORIZED=false
 JWT_SECRET=${JWT_SECRET}
 EOF
 
+
+# Login to ECR
+aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 301782007642.dkr.ecr.ap-south-1.amazonaws.com
+
 # Pull latest image
 docker pull ${docker_image}
 
