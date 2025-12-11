@@ -2,7 +2,7 @@ provider "aws" {
   region = "ap-south-1"
 }
 
-resource "aws_security_group" "strapi_sg" {
+resource "aws_security_group" "strapi_sg_pratyush" {
   name        = "strapi_sg"
   description = "Allow SSH and Strapi port"
 
@@ -46,14 +46,9 @@ data "aws_ami" "latest_al2023" {
   }
 }
 
-resource "aws_key_pair" "pratyush_baxla_key" {
-  key_name   = "pratyush_baxla_key"
-  public_key = file("${path.module}/strapi-tf-key.pub")
-}
-
 resource "aws_instance" "strapi_server" {
-  ami           = data.aws_ami.latest_al2023.id
-  key_name = aws_key_pair.pratyush_baxla_key.key_name
+  ami = data.aws_ami.latest_al2023.id
+  key_name = "pratyush_baxla_key"
   instance_type = "t2.small"
   vpc_security_group_ids = [aws_security_group.strapi_sg.id]
 
