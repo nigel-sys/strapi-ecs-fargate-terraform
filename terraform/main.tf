@@ -48,7 +48,7 @@ data "aws_ami" "latest_al2023" {
 
 resource "aws_key_pair" "pratyush_Baxla_key" {
   key_name   = "pratyush_Baxla_key"
-  public_key = file("${path.module}/my_key.pub")
+  public_key = file("${path.module}/strapi-tf-key.pub")
 }
 
 resource "aws_instance" "strapi_server" {
