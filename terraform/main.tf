@@ -1,5 +1,6 @@
 provider "aws" {
   region = "ap-south-1"
+  profile = "pearlthoughts"
 }
 
 resource "aws_security_group" "strapi_sg" {
