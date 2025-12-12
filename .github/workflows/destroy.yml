@@ -1,0 +1,35 @@
+name: Destroy Terraform
+
+on:
+  workflow_dispatch:
+jobs:
+  destroy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      - name: Decrypt tfvars
+        run: |
+          gpg --quiet --batch --yes \
+            --decrypt --passphrase="${{ secrets.TFVARS_PASSWORD }}" \
+            --output terraform/terraform.tfvars terraform/terraform.tfvars.gpg
+
+      - name: Terraform Init
+        run: |
+          cd terraform
+          terraform init
+
+      - name: Terraform Destroy
+        run: |
+          cd terraform
+          terraform destroy -auto-approve \
+            -var-file="terraform.tfvars"
