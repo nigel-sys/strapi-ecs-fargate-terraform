@@ -32,6 +32,9 @@ DATABASE_SSL_REJECT_UNAUTHORIZED=false
 JWT_SECRET=${JWT_SECRET}
 EOF
 
+export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+export AWS_DEFAULT_REGION=ap-south-1
 
 # Login to ECR
 ECR_PASSWORD=$(aws ecr get-login-password --region ap-south-1)

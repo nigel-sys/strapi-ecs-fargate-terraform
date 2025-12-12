@@ -64,6 +64,9 @@ resource "aws_instance" "strapi_server" {
     DATABASE_PASSWORD   = var.DATABASE_PASSWORD
     JWT_SECRET          = var.JWT_SECRET
     docker_image        = var.docker_image
+    
+    AWS_ACCESS_KEY_ID    = var.AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY = var.AWS_SECRET_ACCESS_KEY
   })
 
   tags = {
