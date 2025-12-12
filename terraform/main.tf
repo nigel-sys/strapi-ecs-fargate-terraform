@@ -4,7 +4,7 @@ provider "aws" {
 
 resource "aws_security_group" "strapi_sg_pratyush" {
   name_prefix = "strapi_sg_pratyush-"     
-  description = "Allow SSH, Strapi port and HTTP"
+  description = "Allow SSH, Strapi and HTTP ports"
 
   ingress {
     from_port   = 22
