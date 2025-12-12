@@ -34,12 +34,8 @@ EOF
 
 
 # Login to ECR
-aws configure set aws_access_key_id "${AWS_ACCESS_KEY_ID}"
-aws configure set aws_secret_access_key "${AWS_SECRET_ACCESS_KEY}"
-aws configure set region "${AWS_REGION}"
-
-aws ecr get-login-password --region ${AWS_REGION} \
-| docker login --username AWS --password-stdin 301782007642.dkr.ecr.${AWS_REGION}.amazonaws.com
+ECR_PASSWORD=$(aws ecr get-login-password --region ap-south-1)
+docker login -u AWS -p "$ECR_PASSWORD" 301782007642.dkr.ecr.ap-south-1.amazonaws.com
 
 # Pull latest image
 docker pull ${docker_image}
