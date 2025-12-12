@@ -34,8 +34,7 @@ EOF
 
 
 # Login to ECR
-ECR_PASSWORD=$(aws ecr get-login-password --region ap-south-1)
-docker login -u AWS -p "$ECR_PASSWORD" 301782007642.dkr.ecr.ap-south-1.amazonaws.com
+aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 301782007642.dkr.ecr.ap-south-1.amazonaws.com
 
 # Pull latest image
 docker pull ${docker_image}
