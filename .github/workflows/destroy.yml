@@ -17,6 +17,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v3
+
       - name: Decrypt tfvars
         run: |
           gpg --quiet --batch --yes \
