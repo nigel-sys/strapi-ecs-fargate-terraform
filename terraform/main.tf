@@ -51,7 +51,6 @@ resource "aws_instance" "strapi_server" {
   key_name               = "pratyush_baxla_key"
   instance_type          = "t2.small"
   vpc_security_group_ids = [aws_security_group.strapi_sg_pratyush.id]
-  iam_instance_profile   = aws_iam_instance_profile.ec2_profile.name
 
   user_data = templatefile("user_data.sh", {
     APP_KEYS            = var.APP_KEYS
