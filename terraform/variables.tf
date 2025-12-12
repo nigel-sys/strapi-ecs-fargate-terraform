@@ -15,7 +15,3 @@ variable "DATABASE_USERNAME" { type = string }
 variable "DATABASE_PASSWORD" { type = string }
 
 variable "JWT_SECRET" { type = string }
-
-variable "AWS_ACCESS_KEY_ID" {}
-variable "AWS_SECRET_ACCESS_KEY" {}
-variable "AWS_REGION" {}
