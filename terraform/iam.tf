@@ -21,7 +21,7 @@ resource "aws_iam_role_policy_attachment" "ecs_execution_role_policy" {
 }
 
 resource "aws_iam_role" "pratyush_baxla_ecs_task_role" {
-  name = "ecs-task-role"
+  name = "pratyush-baxla-ecs-task-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
