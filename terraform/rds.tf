@@ -1,13 +1,29 @@
+resource "aws_security_group" "ecs_sg" {
+  name        = "strapi_ecs_sg"
+  description = "Allow ECS tasks outbound access"  
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "strapi-ecs-sg"
+  }
+}
+
 resource "aws_security_group" "rds_sg" {
   name        = "strapi_rds_sg"
-  description = "Allow PostgreSQL access from EC2 only"
+  description = "Allow PostgreSQL access from ECS tasks"
 
   ingress {
-    description     = "PostgreSQL Access from EC2"
+    description     = "PostgreSQL access from ECS tasks"
     from_port       = 5432
     to_port         = 5432
     protocol        = "tcp"
-    security_groups = [aws_security_group.strapi_sg_pratyush.id]
+    security_groups = [aws_security_group.ecs_sg.id]
   }
 
   egress {
@@ -16,8 +32,13 @@ resource "aws_security_group" "rds_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = {
+    Name = "strapi-rds-sg"
+  }
 }
 
+# PostgreSQL RDS instance
 resource "aws_db_instance" "strapi_db" {
   identifier              = "pratyush-baxla-strapi-postgres-db"
   allocated_storage       = 20
@@ -32,4 +53,12 @@ resource "aws_db_instance" "strapi_db" {
   publicly_accessible     = false
   vpc_security_group_ids  = [aws_security_group.rds_sg.id]
   skip_final_snapshot     = true
+
+  tags = {
+    Name = "pratyush-baxla-strapi-db"
+  }
+}
+
+output "rds_endpoint" {
+  value = aws_db_instance.strapi_db.address
 }
