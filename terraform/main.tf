@@ -33,3 +33,15 @@ resource "aws_security_group" "strapi_sg_pratyush" {
     Name = "pratyush-baxla-strapi-sg"
   }
 }
+
+data "aws_vpc" "default" {
+  default = true
+}
+
+data "aws_subnets" "default" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.default.id]
+  }
+}
+
