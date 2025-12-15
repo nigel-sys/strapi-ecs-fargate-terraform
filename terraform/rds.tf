@@ -1,5 +1,5 @@
 resource "aws_security_group" "ecs_sg" {
-  name        = "strapi_ecs_sg"
+  name        = "pratyush-baxla-strapi_ecs_sg"
   description = "Allow ECS tasks outbound access"  
 
   egress {
@@ -10,12 +10,12 @@ resource "aws_security_group" "ecs_sg" {
   }
 
   tags = {
-    Name = "strapi-ecs-sg"
+    Name = "pratyush-baxla-strapi-ecs-sg"
   }
 }
 
 resource "aws_security_group" "rds_sg" {
-  name        = "strapi_rds_sg"
+  name        = "pratyush-baxla-strapi_rds_sg"
   description = "Allow PostgreSQL access from ECS tasks"
 
   ingress {
@@ -34,7 +34,7 @@ resource "aws_security_group" "rds_sg" {
   }
 
   tags = {
-    Name = "strapi-rds-sg"
+    Name = "pratyush-baxla-strapi-rds-sg"
   }
 }
 
