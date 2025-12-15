@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "aws_security_group" "strapi_sg_pratyush" {
-  name_prefix = "strapi_sg_pratyush-"     
+  name = "pratyush-baxla-strapi-sg"     
   description = "Allow SSH, Strapi and HTTP ports"
 
   ingress {
@@ -58,7 +58,7 @@ resource "aws_instance" "strapi_server" {
     ADMIN_JWT_SECRET    = var.ADMIN_JWT_SECRET
     TRANSFER_TOKEN_SALT = var.TRANSFER_TOKEN_SALT
     ENCRYPTION_KEY      = var.ENCRYPTION_KEY
-    DATABASE_HOST       = var.DATABASE_HOST
+    DATABASE_HOST = aws_db_instance.strapi_db.address
     DATABASE_NAME       = var.DATABASE_NAME
     DATABASE_USERNAME   = var.DATABASE_USERNAME
     DATABASE_PASSWORD   = var.DATABASE_PASSWORD
