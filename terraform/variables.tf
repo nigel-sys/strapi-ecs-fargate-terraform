@@ -19,11 +19,6 @@ variable "ENCRYPTION_KEY" {
   type = string
 }
 
-variable "DATABASE_HOST" {
-  type = string
-  description = "RDS endpoint, e.g., from aws_db_instance.strapi_db.address"
-}
-
 variable "DATABASE_NAME" {
   type = string
 }
