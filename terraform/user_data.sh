@@ -37,13 +37,12 @@ export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
 export AWS_DEFAULT_REGION=ap-south-1
 
 echo "Waiting for PostgreSQL to be ready..."
-
-until nc -z ${DATABASE_HOST} 5432; do
-  echo "Postgres not ready yet..."
-  sleep 10
+# Wait until PostgreSQL is ready
+until docker run --rm -e PGPASSWORD=${DATABASE_PASSWORD} postgres:latest psql -h ${DATABASE_HOST} -U ${DATABASE_USERNAME} -d ${DATABASE_NAME} -c '\q'; do
+  echo "PostgreSQL is unavailable - sleeping"
+  sleep 5
 done
-
-echo "Postgres is ready"
+echo "PostgreSQL is up - continuing"
 
 # Login to ECR
 ECR_PASSWORD=$(aws ecr get-login-password --region ap-south-1)
