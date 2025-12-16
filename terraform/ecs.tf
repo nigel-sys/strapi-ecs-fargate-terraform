@@ -49,11 +49,6 @@ resource "aws_ecs_task_definition" "strapi" {
       { name = "DATABASE_SSL", value = "true" },
       { name = "DATABASE_SSL_REJECT_UNAUTHORIZED", value = "false" },
 
-      { name = "DATABASE_CONNECTION_POOL_MIN", value = "0" },
-      { name = "DATABASE_CONNECTION_POOL_MAX", value = "2" },
-      { name = "DATABASE_CONNECTION_POOL_ACQUIRE_TIMEOUT", value = "60000" },
-      { name = "DATABASE_CONNECTION_POOL_IDLE_TIMEOUT", value = "30000" },
-
       { name = "JWT_SECRET", value = var.JWT_SECRET }
     ]
 

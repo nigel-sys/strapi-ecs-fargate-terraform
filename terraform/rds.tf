@@ -23,7 +23,7 @@ resource "aws_security_group" "rds_sg" {
     from_port       = 5432
     to_port         = 5432
     protocol        = "tcp"
-    security_groups = [aws_security_group.ecs_sg.id]
+    security_groups = [aws_security_group.strapi_sg_pratyush.id]
   }
 
   egress {
@@ -43,7 +43,7 @@ resource "aws_db_instance" "strapi_db" {
   identifier              = "pratyush-baxla-strapi-postgres-db"
   allocated_storage       = 20
   engine                  = "postgres"
-  engine_version          = "18.1"
+  engine_version          = "15.7"
   instance_class          = "db.t3.micro"
 
   db_name                 = var.DATABASE_NAME
