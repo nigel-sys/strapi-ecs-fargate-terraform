@@ -2,6 +2,11 @@ resource "aws_ecs_cluster" "strapi" {
   name = "pratyush-baxla-strapi-cluster"
 }
 
+resource "aws_cloudwatch_log_group" "strapi" {
+  name = "/ecs/pratyush-baxla-strapi"
+  retention_in_days = 7
+}
+
 resource "aws_ecs_task_definition" "strapi" {
   family                   = "pratyush-baxla-strapi-task"
   requires_compatibilities = ["FARGATE"]
@@ -46,7 +51,14 @@ resource "aws_ecs_task_definition" "strapi" {
 
         { name = "JWT_SECRET", value = var.JWT_SECRET }
       ]
-
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.strapi.name
+          awslogs-region        = "ap-south-1"
+          awslogs-stream-prefix = "strapi"
+        }
+      }
     }
   ])
 }
