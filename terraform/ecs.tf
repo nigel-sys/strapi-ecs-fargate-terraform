@@ -49,7 +49,13 @@ resource "aws_ecs_task_definition" "strapi" {
         { name = "DATABASE_SSL", value = "true" },
         { name = "DATABASE_SSL_REJECT_UNAUTHORIZED", value = "false" },
 
-        { name = "JWT_SECRET", value = var.JWT_SECRET }
+        { name = "JWT_SECRET", value = var.JWT_SECRET },
+
+        { name  = "DATABASE_POOL_MIN", value = "0" },
+        { name  = "DATABASE_POOL_MAX", value = "5" },
+        { name  = "DATABASE_DATABASE_POOL_IDLE_TIMEOUT", value = "30000" },
+        { name  = "DATABASE_POOL_ACQUIRE_TIMEOUT", value = "60000"}
+
       ]
       logConfiguration = {
         logDriver = "awslogs"
