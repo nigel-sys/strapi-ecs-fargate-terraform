@@ -44,7 +44,7 @@ resource "aws_db_instance" "strapi_db" {
   allocated_storage       = 20
   engine                  = "postgres"
   engine_version          = "18.1"
-  instance_class          = "db.t4g.micro"
+  instance_class          = "db.t3.micro"
 
   db_name                 = var.DATABASE_NAME
   username                = var.DATABASE_USERNAME
