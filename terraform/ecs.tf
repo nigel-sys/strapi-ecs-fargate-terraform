@@ -30,33 +30,33 @@ resource "aws_ecs_task_definition" "strapi" {
       ]
 
       environment = [
-        { name = "HOST", value = "0.0.0.0" },
-        { name = "PORT", value = "1337" },
-        { name = "NODE_ENV", value = "production" },
+      { name = "HOST", value = "0.0.0.0" },
+      { name = "PORT", value = "1337" },
+      { name = "NODE_ENV", value = "production" },
 
-        { name = "APP_KEYS", value = var.APP_KEYS },
-        { name = "API_TOKEN_SALT", value = var.API_TOKEN_SALT },
-        { name = "ADMIN_JWT_SECRET", value = var.ADMIN_JWT_SECRET },
-        { name = "TRANSFER_TOKEN_SALT", value = var.TRANSFER_TOKEN_SALT },
-        { name = "ENCRYPTION_KEY", value = var.ENCRYPTION_KEY },
+      { name = "APP_KEYS", value = var.APP_KEYS },
+      { name = "API_TOKEN_SALT", value = var.API_TOKEN_SALT },
+      { name = "ADMIN_JWT_SECRET", value = var.ADMIN_JWT_SECRET },
+      { name = "TRANSFER_TOKEN_SALT", value = var.TRANSFER_TOKEN_SALT },
+      { name = "ENCRYPTION_KEY", value = var.ENCRYPTION_KEY },
 
-        { name = "DATABASE_CLIENT", value = "postgres" },
-        { name = "DATABASE_HOST", value = aws_db_instance.strapi_db.address },
-        { name = "DATABASE_PORT", value = "5432" },
-        { name = "DATABASE_NAME", value = var.DATABASE_NAME },
-        { name = "DATABASE_USERNAME", value = var.DATABASE_USERNAME },
-        { name = "DATABASE_PASSWORD", value = var.DATABASE_PASSWORD },
-        { name = "DATABASE_SSL", value = "true" },
-        { name = "DATABASE_SSL_REJECT_UNAUTHORIZED", value = "false" },
+      { name = "DATABASE_CLIENT", value = "postgres" },
+      { name = "DATABASE_HOST", value = aws_db_instance.strapi_db.address },
+      { name = "DATABASE_PORT", value = "5432" },
+      { name = "DATABASE_NAME", value = var.DATABASE_NAME },
+      { name = "DATABASE_USERNAME", value = var.DATABASE_USERNAME },
+      { name = "DATABASE_PASSWORD", value = var.DATABASE_PASSWORD },
+      { name = "DATABASE_SSL", value = "true" },
+      { name = "DATABASE_SSL_REJECT_UNAUTHORIZED", value = "false" },
 
-        { name = "JWT_SECRET", value = var.JWT_SECRET },
+      { name = "DATABASE_CONNECTION_POOL_MIN", value = "0" },
+      { name = "DATABASE_CONNECTION_POOL_MAX", value = "2" },
+      { name = "DATABASE_CONNECTION_POOL_ACQUIRE_TIMEOUT", value = "60000" },
+      { name = "DATABASE_CONNECTION_POOL_IDLE_TIMEOUT", value = "30000" },
 
-        { name  = "DATABASE_POOL_MIN", value = "0" },
-        { name  = "DATABASE_POOL_MAX", value = "5" },
-        { name  = "DATABASE_DATABASE_POOL_IDLE_TIMEOUT", value = "30000" },
-        { name  = "DATABASE_POOL_ACQUIRE_TIMEOUT", value = "60000"}
+      { name = "JWT_SECRET", value = var.JWT_SECRET }
+    ]
 
-      ]
       logConfiguration = {
         logDriver = "awslogs"
         options = {
