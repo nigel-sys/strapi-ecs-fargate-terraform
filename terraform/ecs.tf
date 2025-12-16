@@ -2,10 +2,6 @@ resource "aws_ecs_cluster" "strapi" {
   name = "pratyush-baxla-strapi-cluster"
 }
 
-resource "aws_cloudwatch_log_group" "strapi" {
-  name = "/ecs/pratyush-baxla-strapi"
-}
-
 resource "aws_ecs_task_definition" "strapi" {
   family                   = "pratyush-baxla-strapi-task"
   requires_compatibilities = ["FARGATE"]
