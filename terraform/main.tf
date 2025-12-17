@@ -40,15 +40,7 @@ data "aws_vpc" "default" {
 }
 
 data "aws_subnet" "public_1b" {
-  filter {
-    name   = "map-public-ip-on-launch"
-    values = ["true"]
-  }
-
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.default.id]
-  }
+  id = "subnet-0dcf98e23a5861550"
 }
 
 resource "aws_subnet" "pratyush_private_1b" {
