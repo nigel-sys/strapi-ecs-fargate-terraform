@@ -12,7 +12,7 @@ resource "aws_security_group" "strapi_sg_pratyush" {
     from_port   = 1337
     to_port     = 1337
     protocol    = "tcp"
-    cidr_blocks = [aws_security_group.alb_sg.id]
+    security_groups = [aws_security_group.alb_sg.id]
   }
 
   ingress {

@@ -2,7 +2,10 @@ resource "aws_lb" "strapi_alb" {
   name               = "pratyush-strapi-alb"
   load_balancer_type = "application"
   internal           = false
-  subnets            = [data.aws_subnet.public_1b.id]
+  subnets            = [
+    "subnet-0dcf98e23a5861550",  
+    "subnet-0342cfb028d6aff5a"   
+  ]
   security_groups    = [aws_security_group.alb_sg.id]
 }
 
