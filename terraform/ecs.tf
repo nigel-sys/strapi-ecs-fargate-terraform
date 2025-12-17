@@ -77,6 +77,12 @@ resource "aws_ecs_service" "strapi" {
     assign_public_ip = false
   }
 
+  load_balancer {
+    target_group_arn = aws_lb_target_group.strapi_tg.arn
+    container_name   = "strapi"
+    container_port   = 1337
+  }
+
   depends_on = [
     aws_ecs_task_definition.strapi
   ]
