@@ -82,11 +82,6 @@ resource "aws_ecs_service" "strapi" {
     weight            = 1
   }
 
-  capacity_provider_strategy {
-    capacity_provider = "FARGATE"
-    weight            = 1
-  }
-
   network_configuration {
     subnets          = [aws_subnet.pratyush_private_1b.id]
     security_groups  = [aws_security_group.strapi_sg_pratyush.id]
