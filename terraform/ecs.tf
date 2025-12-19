@@ -71,10 +71,11 @@ resource "aws_ecs_task_definition" "strapi" {
 }
 
 resource "aws_ecs_service" "strapi" {
-  name            = "pratyush-baxla-strapi-service"
-  cluster         = aws_ecs_cluster.strapi.id
-  task_definition = aws_ecs_task_definition.strapi.arn
-  desired_count   = 1
+  name                 = "pratyush-baxla-strapi-service"
+  cluster              = aws_ecs_cluster.strapi.id
+  task_definition      = aws_ecs_task_definition.strapi.arn
+  desired_count        = 1
+  force_new_deployment = true
 
   capacity_provider_strategy {
     capacity_provider = "FARGATE_SPOT"
