@@ -5,10 +5,11 @@ resource "aws_ecs_cluster" "strapi" {
     name  = "containerInsights"
     value = "enabled"
   }
+
 }
 
 resource "aws_cloudwatch_log_group" "strapi" {
-  name = "/ecs/pratyush-baxla-strapi"
+  name              = "/ecs/pratyush-baxla-strapi"
   retention_in_days = 7
 }
 
@@ -35,27 +36,27 @@ resource "aws_ecs_task_definition" "strapi" {
       ]
 
       environment = [
-      { name = "HOST", value = "0.0.0.0" },
-      { name = "PORT", value = "1337" },
-      { name = "NODE_ENV", value = "production" },
+        { name = "HOST", value = "0.0.0.0" },
+        { name = "PORT", value = "1337" },
+        { name = "NODE_ENV", value = "production" },
 
-      { name = "APP_KEYS", value = var.APP_KEYS },
-      { name = "API_TOKEN_SALT", value = var.API_TOKEN_SALT },
-      { name = "ADMIN_JWT_SECRET", value = var.ADMIN_JWT_SECRET },
-      { name = "TRANSFER_TOKEN_SALT", value = var.TRANSFER_TOKEN_SALT },
-      { name = "ENCRYPTION_KEY", value = var.ENCRYPTION_KEY },
+        { name = "APP_KEYS", value = var.APP_KEYS },
+        { name = "API_TOKEN_SALT", value = var.API_TOKEN_SALT },
+        { name = "ADMIN_JWT_SECRET", value = var.ADMIN_JWT_SECRET },
+        { name = "TRANSFER_TOKEN_SALT", value = var.TRANSFER_TOKEN_SALT },
+        { name = "ENCRYPTION_KEY", value = var.ENCRYPTION_KEY },
 
-      { name = "DATABASE_CLIENT", value = "postgres" },
-      { name = "DATABASE_HOST", value = aws_db_instance.strapi_db.address },
-      { name = "DATABASE_PORT", value = "5432" },
-      { name = "DATABASE_NAME", value = var.DATABASE_NAME },
-      { name = "DATABASE_USERNAME", value = var.DATABASE_USERNAME },
-      { name = "DATABASE_PASSWORD", value = var.DATABASE_PASSWORD },
-      { name = "DATABASE_SSL", value = "true" },
-      { name = "DATABASE_SSL_REJECT_UNAUTHORIZED", value = "false" },
+        { name = "DATABASE_CLIENT", value = "postgres" },
+        { name = "DATABASE_HOST", value = aws_db_instance.strapi_db.address },
+        { name = "DATABASE_PORT", value = "5432" },
+        { name = "DATABASE_NAME", value = var.DATABASE_NAME },
+        { name = "DATABASE_USERNAME", value = var.DATABASE_USERNAME },
+        { name = "DATABASE_PASSWORD", value = var.DATABASE_PASSWORD },
+        { name = "DATABASE_SSL", value = "true" },
+        { name = "DATABASE_SSL_REJECT_UNAUTHORIZED", value = "false" },
 
-      { name = "JWT_SECRET", value = var.JWT_SECRET }
-    ]
+        { name = "JWT_SECRET", value = var.JWT_SECRET }
+      ]
 
       logConfiguration = {
         logDriver = "awslogs"
@@ -74,11 +75,20 @@ resource "aws_ecs_service" "strapi" {
   cluster         = aws_ecs_cluster.strapi.id
   task_definition = aws_ecs_task_definition.strapi.arn
   desired_count   = 1
-  launch_type     = "FARGATE"
+
+  capacity_provider_strategy {
+    capacity_provider = "FARGATE_SPOT"
+    weight            = 1
+  }
+
+  capacity_provider_strategy {
+    capacity_provider = "FARGATE"
+    weight            = 1
+  }
 
   network_configuration {
-    subnets         = [aws_subnet.pratyush_private_1b.id]
-    security_groups = [aws_security_group.strapi_sg_pratyush.id]
+    subnets          = [aws_subnet.pratyush_private_1b.id]
+    security_groups  = [aws_security_group.strapi_sg_pratyush.id]
     assign_public_ip = false
   }
 
