@@ -48,7 +48,7 @@ jobs:
           STRAPI_JWT_SECRET: ${{ secrets.STRAPI_JWT_SECRET }}
           STRAPI_DATABASE_PASSWORD: ${{ secrets.STRAPI_DATABASE_PASSWORD }}
         run: |
-          envsubst < .github/ecs/taskdef-template.json > taskdef.json
+          envsubst < taskdef.json > taskdef_rendered.json
 
       - name: Verify rendered task definition
         run: |
@@ -57,7 +57,7 @@ jobs:
       - name: Register ECS task definition
         run: |
           aws ecs register-task-definition \
-          --cli-input-json file://taskdef.json
+            --cli-input-json file://taskdef_rendered.json
 
       - name: Render AppSpec
         run: |
