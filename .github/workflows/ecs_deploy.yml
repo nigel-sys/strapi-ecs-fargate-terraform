@@ -33,20 +33,26 @@ jobs:
       - name: Generate new ECS task definition
         run: |
           printf '{
-            "family": "%s",
-            "containerDefinitions": [
+              "family": "%s",
+              "networkMode": "awsvpc",
+              "requiresCompatibilities": ["FARGATE"],
+              "cpu": "512",
+              "memory": "1024",
+              "executionRoleArn": "arn:aws:iam::301782007642:role/pratyush-baxla-ecs-execution-role",
+              "taskRoleArn": "arn:aws:iam::301782007642:role/pratyush-baxla-ecs-task-role",
+              "containerDefinitions": [
               {
-                "name": "strapi",
-                "image": "%s",
-                "essential": true,
-                "portMappings": [
-                  {"containerPort": 1337, "protocol": "tcp"}
-                ],
-                "environment": [
-                  {"name": "NODE_ENV", "value": "production"}
-                ]
+                  "name": "strapi",
+                  "image": "%s",
+                  "essential": true,
+                  "portMappings": [
+                  {
+                      "containerPort": 1337,
+                      "protocol": "tcp"
+                  }
+                  ]
               }
-            ]
+              ]
           }' "$TASK_FAMILY" "$ECR_IMAGE" > taskdef.json
 
       - name: Register new task definition
