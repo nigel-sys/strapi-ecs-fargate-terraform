@@ -59,6 +59,15 @@ jobs:
           aws ecs register-task-definition \
             --cli-input-json file://taskdef_rendered.json
 
+      - name: Get Task Definition ARN
+        run: |
+          TASK_DEF_ARN=$(aws ecs register-task-definition \
+            --cli-input-json file://taskdef_rendered.json \
+            --query "taskDefinition.taskDefinitionArn" \
+            --output text)
+
+          echo "TASK_DEF_ARN=$TASK_DEF_ARN" >> $GITHUB_ENV
+
       - name: Render AppSpec
         run: |
           sed "s|<TASK_DEFINITION_ARN>|$TASK_DEF_ARN|" appspec.yaml > appspec_rendered.yaml
