@@ -41,7 +41,9 @@
         { "name": "DATABASE_USERNAME", "value": "strapi" },
         { "name": "DATABASE_PASSWORD", "value": "${STRAPI_DATABASE_PASSWORD}" },
 
-        { "name": "JWT_SECRET", "value": "${STRAPI_JWT_SECRET}" }
+        { "name": "JWT_SECRET", "value": "${STRAPI_JWT_SECRET}" },
+        { "name": "DATABASE_SSL", "value": "true" },
+        { "name": "DATABASE_SSL_REJECT_UNAUTHORIZED", "value": "false" }
       ],
       "logConfiguration": {
         "logDriver": "awslogs",
