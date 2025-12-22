@@ -56,10 +56,21 @@ jobs:
         run: |
           sed "s|<TASK_DEFINITION_ARN>|$TASK_DEF_ARN|" appspec.yaml > appspec_rendered.yaml
 
+      - name: Create CodeDeploy revision file
+        run: |
+          cat <<EOF > revision.json
+          {
+              "revisionType": "AppSpecContent",
+              "appSpecContent": {
+              "content": "$(sed 's/"/\\"/g' appspec_rendered.yaml)"
+              }
+          }
+          EOF
+
       - name: Deploy via CodeDeploy
         run: |
           aws deploy create-deployment \
             --application-name $CODEDEPLOY_APP \
             --deployment-group-name $CODEDEPLOY_DG \
-            --revision revisionType=AppSpecContent,appSpecContent="{\"content\":\"$(sed 's/"/\\"/g' appspec_rendered.yaml)\"}" \
+            --revision file://revision.json \
             --deployment-config-name CodeDeployDefault.ECSCanary10Percent5Minutes
