@@ -25,14 +25,23 @@ jobs:
 
       - name: Set variables
         run: |
-          echo "ECR_IMAGE=301782007642.dkr.ecr.ap-south-1.amazonaws.com/pratyush_baxla/strapi-app:${{ github.event.inputs.image_tag }}" >> $GITHUB_ENV
-          echo "TASK_FAMILY=pratyush-baxla-strapi-task" >> $GITHUB_ENV
+          IMAGE="301782007642.dkr.ecr.ap-south-1.amazonaws.com/pratyush_baxla/strapi-app:${{ github.event.inputs.image_tag }}"
+          echo "IMAGE_URI=$IMAGE" >> $GITHUB_ENV
+          echo "Using image: $IMAGE"
           echo "CODEDEPLOY_APP=pratyush-strapi" >> $GITHUB_ENV
           echo "CODEDEPLOY_DG=pratyush-strapi-dg" >> $GITHUB_ENV
+
+      - name: Debug image URI
+        run: |
+          echo "IMAGE_URI=$IMAGE_URI"
 
       - name: Render task definition
         run: |
           sed "s|<IMAGE_URI>|$IMAGE_URI|" taskdef.json > taskdef_rendered.json
+
+      - name: Verify rendered task definition
+        run: |
+          cat taskdef_rendered.json
 
       - name: Register ECS task definition
         run: |
