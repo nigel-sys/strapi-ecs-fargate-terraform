@@ -68,9 +68,6 @@ resource "aws_ecs_task_definition" "strapi" {
       }
     }
   ])
-  lifecycle {
-    ignore_changes = [container_definitions]
-  }
 }
 
 resource "aws_ecs_service" "strapi" {
