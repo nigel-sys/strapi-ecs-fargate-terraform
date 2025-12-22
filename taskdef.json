@@ -9,16 +9,48 @@
   "containerDefinitions": [
     {
       "name": "strapi",
-      "image": "<IMAGE_URI>",
+      "image": "${IMAGE}",
       "essential": true,
-      "cpu": 512,
-      "memory": 1024,
       "portMappings": [
         {
           "containerPort": 1337,
           "protocol": "tcp"
         }
-      ]
+      ],
+      "environment": [
+        { "name": "HOST", "value": "0.0.0.0" },
+        { "name": "PORT", "value": "1337" },
+        { "name": "NODE_ENV", "value": "production" },
+
+        { "name": "APP_KEYS", "value": "${STRAPI_APP_KEYS}" },
+        { "name": "API_TOKEN_SALT", "value": "${STRAPI_API_TOKEN_SALT}" },
+        { "name": "ADMIN_JWT_SECRET", "value": "${STRAPI_ADMIN_JWT_SECRET}" },
+        {
+          "name": "TRANSFER_TOKEN_SALT",
+          "value": "${STRAPI_TRANSFER_TOKEN_SALT}"
+        },
+        { "name": "ENCRYPTION_KEY", "value": "${STRAPI_ENCRYPTION_KEY}" },
+
+        { "name": "DATABASE_CLIENT", "value": "postgres" },
+        {
+          "name": "DATABASE_HOST",
+          "value": "aws_db_instance.strapi_db.address"
+        },
+        { "name": "DATABASE_PORT", "value": "5432" },
+        { "name": "DATABASE_NAME", "value": "postgres" },
+        { "name": "DATABASE_USERNAME", "value": "strapi" },
+        { "name": "DATABASE_PASSWORD", "value": "${STRAPI_DATABASE_PASSWORD}" },
+
+        { "name": "JWT_SECRET", "value": "${STRAPI_JWT_SECRET}" }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/pratyush-baxla-strapi",
+          "awslogs-region": "ap-south-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
     }
   ]
 }

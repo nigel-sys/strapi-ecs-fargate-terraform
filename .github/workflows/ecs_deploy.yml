@@ -35,9 +35,20 @@ jobs:
         run: |
           echo "IMAGE_URI=$IMAGE_URI"
 
-      - name: Render task definition
+      - name: Render ECS task definition
+        env:
+          IMAGE: 301782007642.dkr.ecr.ap-south-1.amazonaws.com/pratyush_baxla/strapi:${{ github.event.inputs.image_tag }}
+
+          STRAPI_APP_KEYS: ${{ secrets.STRAPI_APP_KEYS }}
+          STRAPI_API_TOKEN_SALT: ${{ secrets.STRAPI_API_TOKEN_SALT }}
+          STRAPI_ADMIN_JWT_SECRET: ${{ secrets.STRAPI_ADMIN_JWT_SECRET }}
+          STRAPI_TRANSFER_TOKEN_SALT: ${{ secrets.STRAPI_TRANSFER_TOKEN_SALT }}
+          STRAPI_ENCRYPTION_KEY: ${{ secrets.STRAPI_ENCRYPTION_KEY }}
+
+          STRAPI_JWT_SECRET: ${{ secrets.STRAPI_JWT_SECRET }}
+          STRAPI_DATABASE_PASSWORD: ${{ secrets.STRAPI_DATABASE_PASSWORD }}
         run: |
-          sed "s|<IMAGE_URI>|$IMAGE_URI|" taskdef.json > taskdef_rendered.json
+          envsubst < .github/ecs/taskdef-template.json > taskdef.json
 
       - name: Verify rendered task definition
         run: |
@@ -45,12 +56,8 @@ jobs:
 
       - name: Register ECS task definition
         run: |
-          TASK_DEF_ARN=$(aws ecs register-task-definition \
-            --cli-input-json file://taskdef_rendered.json \
-            --query "taskDefinition.taskDefinitionArn" \
-            --output text)
-
-          echo "TASK_DEF_ARN=$TASK_DEF_ARN" >> $GITHUB_ENV
+          aws ecs register-task-definition \
+          --cli-input-json file://taskdef.json
 
       - name: Render AppSpec
         run: |
