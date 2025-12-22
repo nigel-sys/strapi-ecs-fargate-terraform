@@ -1,0 +1,66 @@
+name: Deploy Strapi to ECS Blue/Green
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Docker image tag to deploy'
+        required: true
+        default: 'pratyush_nigel_baxla'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      - name: Set variables
+        run: |
+          echo "ECR_IMAGE=301782007642.dkr.ecr.ap-south-1.amazonaws.com/pratyush_baxla/strapi-app:${{ github.event.inputs.image_tag }}" >> $GITHUB_ENV
+          echo "TASK_FAMILY=pratyush-baxla-strapi-task" >> $GITHUB_ENV
+          echo "CODEDEPLOY_APP=pratyush-strapi" >> $GITHUB_ENV
+          echo "CODEDEPLOY_DG=pratyush-strapi-dg" >> $GITHUB_ENV
+
+      - name: Generate new ECS task definition
+        run: |
+          printf '{
+            "family": "%s",
+            "containerDefinitions": [
+              {
+                "name": "strapi",
+                "image": "%s",
+                "essential": true,
+                "portMappings": [
+                  {"containerPort": 1337, "protocol": "tcp"}
+                ],
+                "environment": [
+                  {"name": "NODE_ENV", "value": "production"}
+                ]
+              }
+            ]
+          }' "$TASK_FAMILY" "$ECR_IMAGE" > taskdef.json
+
+      - name: Register new task definition
+        id: register
+        run: |
+          TASK_DEF_ARN=$(aws ecs register-task-definition \
+            --cli-input-json file://taskdef.json \
+            --query 'taskDefinition.taskDefinitionArn' \
+            --output text)
+          echo "TASK_DEF_ARN=$TASK_DEF_ARN" >> $GITHUB_ENV
+
+      - name: Create CodeDeploy deployment
+        run: |
+          aws deploy create-deployment \
+            --application-name $CODEDEPLOY_APP \
+            --deployment-group-name $CODEDEPLOY_DG \
+            --revision revisionType=AppSpecContent,appSpecContent="$(cat appspec.yaml | sed "s|PLACEHOLDER|$TASK_DEF_ARN|")"
