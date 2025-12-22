@@ -67,6 +67,10 @@ jobs:
           }
           EOF
 
+      - name: Debug revision file
+        run: |
+          cat revision.json
+
       - name: Deploy via CodeDeploy
         run: |
           aws deploy create-deployment \
