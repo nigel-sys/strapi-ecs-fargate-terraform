@@ -2,11 +2,11 @@ resource "aws_lb" "strapi_alb" {
   name               = "pratyush-strapi-alb"
   load_balancer_type = "application"
   internal           = false
-  subnets            = [
-    "subnet-0dcf98e23a5861550",  
-    "subnet-0342cfb028d6aff5a"   
+  subnets = [
+    "subnet-0dcf98e23a5861550",
+    "subnet-0342cfb028d6aff5a"
   ]
-  security_groups    = [aws_security_group.alb_sg.id]
+  security_groups = [aws_security_group.alb_sg.id]
 }
 
 resource "aws_security_group" "alb_sg" {
@@ -20,6 +20,13 @@ resource "aws_security_group" "alb_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -28,7 +35,7 @@ resource "aws_security_group" "alb_sg" {
   }
 }
 
-resource "aws_lb_target_group" "strapi_tg" {
+resource "aws_lb_target_group" "strapi_tg_blue" {
   name        = "pratyush-strapi-tg"
   port        = 1337
   protocol    = "HTTP"
@@ -45,6 +52,19 @@ resource "aws_lb_target_group" "strapi_tg" {
   }
 }
 
+resource "aws_lb_target_group" "strapi_tg_green" {
+  name        = "pratyush-strapi-tg-green"
+  port        = 1337
+  protocol    = "HTTP"
+  vpc_id      = data.aws_vpc.default.id
+  target_type = "ip"
+
+  health_check {
+    path    = "/"
+    matcher = "200-399"
+  }
+}
+
 resource "aws_lb_listener" "strapi_listener" {
   load_balancer_arn = aws_lb.strapi_alb.arn
   port              = 80
@@ -52,6 +72,6 @@ resource "aws_lb_listener" "strapi_listener" {
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.strapi_tg.arn
+    target_group_arn = aws_lb_target_group.strapi_tg_blue.arn
   }
 }

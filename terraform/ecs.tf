@@ -25,7 +25,7 @@ resource "aws_ecs_task_definition" "strapi" {
   container_definitions = jsonencode([
     {
       name      = "strapi"
-      image     = var.docker_image
+      image     = "public.ecr.aws/docker/library/nginx:latest"
       essential = true
 
       portMappings = [
@@ -68,18 +68,24 @@ resource "aws_ecs_task_definition" "strapi" {
       }
     }
   ])
+  lifecycle {
+    ignore_changes = [container_definitions]
+  }
 }
 
 resource "aws_ecs_service" "strapi" {
-  name                 = "pratyush-baxla-strapi-service"
-  cluster              = aws_ecs_cluster.strapi.id
-  task_definition      = aws_ecs_task_definition.strapi.arn
-  desired_count        = 1
-  force_new_deployment = true
+  name            = "pratyush-baxla-strapi-service"
+  cluster         = aws_ecs_cluster.strapi.id
+  task_definition = aws_ecs_task_definition.strapi.arn
+  desired_count   = 1
 
   capacity_provider_strategy {
     capacity_provider = "FARGATE_SPOT"
     weight            = 1
+  }
+
+  deployment_controller {
+    type = "CODE_DEPLOY"
   }
 
   network_configuration {
@@ -89,7 +95,7 @@ resource "aws_ecs_service" "strapi" {
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.strapi_tg.arn
+    target_group_arn = aws_lb_target_group.strapi_tg_blue.arn
     container_name   = "strapi"
     container_port   = 1337
   }

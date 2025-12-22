@@ -7,11 +7,11 @@ resource "aws_security_group" "strapi_sg_pratyush" {
   description = "Allow HTTP access to Strapi running on ECS Fargate"
 
   ingress {
-    description = "Allow Strapi traffic"
-    from_port   = 1337
-    to_port     = 1337
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    description     = "Allow Strapi traffic"
+    from_port       = 1337
+    to_port         = 1337
+    protocol        = "tcp"
+    security_groups = [aws_security_group.alb_sg.id]
   }
 
   ingress {
