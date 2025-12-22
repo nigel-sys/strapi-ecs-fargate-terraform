@@ -29,6 +29,11 @@ resource "aws_codedeploy_deployment_group" "strapi" {
       action                           = "TERMINATE"
       termination_wait_time_in_minutes = 5
     }
+
+    deployment_ready_option {
+      action_on_timeout    = "CONTINUE_DEPLOYMENT"
+      wait_time_in_minutes = 0
+    }
   }
 
   load_balancer_info {
