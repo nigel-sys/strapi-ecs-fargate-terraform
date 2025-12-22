@@ -30,43 +30,27 @@ jobs:
           echo "CODEDEPLOY_APP=pratyush-strapi" >> $GITHUB_ENV
           echo "CODEDEPLOY_DG=pratyush-strapi-dg" >> $GITHUB_ENV
 
-      - name: Generate new ECS task definition
+      - name: Render task definition
         run: |
-          printf '{
-              "family": "%s",
-              "networkMode": "awsvpc",
-              "requiresCompatibilities": ["FARGATE"],
-              "cpu": "512",
-              "memory": "1024",
-              "executionRoleArn": "arn:aws:iam::301782007642:role/pratyush-baxla-ecs-execution-role",
-              "taskRoleArn": "arn:aws:iam::301782007642:role/pratyush-baxla-ecs-task-role",
-              "containerDefinitions": [
-              {
-                  "name": "strapi",
-                  "image": "%s",
-                  "essential": true,
-                  "portMappings": [
-                  {
-                      "containerPort": 1337,
-                      "protocol": "tcp"
-                  }
-                  ]
-              }
-              ]
-          }' "$TASK_FAMILY" "$ECR_IMAGE" > taskdef.json
+          sed "s|<IMAGE_URI>|$IMAGE_URI|" taskdef.json > taskdef_rendered.json
 
-      - name: Register new task definition
-        id: register
+      - name: Register ECS task definition
         run: |
           TASK_DEF_ARN=$(aws ecs register-task-definition \
-            --cli-input-json file://taskdef.json \
-            --query 'taskDefinition.taskDefinitionArn' \
+            --cli-input-json file://taskdef_rendered.json \
+            --query "taskDefinition.taskDefinitionArn" \
             --output text)
+
           echo "TASK_DEF_ARN=$TASK_DEF_ARN" >> $GITHUB_ENV
 
-      - name: Create CodeDeploy deployment
+      - name: Render AppSpec
+        run: |
+          sed "s|<TASK_DEFINITION_ARN>|$TASK_DEF_ARN|" appspec.yaml > appspec_rendered.yaml
+
+      - name: Deploy via CodeDeploy
         run: |
           aws deploy create-deployment \
             --application-name $CODEDEPLOY_APP \
             --deployment-group-name $CODEDEPLOY_DG \
-            --revision revisionType=AppSpecContent,appSpecContent="$(cat appspec.yaml | sed "s|<TASK_DEFINITION_ARN>|$TASK_DEF_ARN|")"
+            --revision revisionType=AppSpecContent,appSpecContent="{\"content\":\"$(sed 's/"/\\"/g' appspec_rendered.yaml)\"}" \
+            --deployment-config-name CodeDeployDefault.ECSCanary10Percent5Minutes

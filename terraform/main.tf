@@ -4,7 +4,7 @@ provider "aws" {
 
 resource "aws_security_group" "strapi_sg_pratyush" {
   name        = "pratyush-baxla-strapi-sg"
-  description = "Allow HTTP access to Strapi running on ECS Fargate"
+  description = "Allow Strapi traffic on ECS Fargate"
 
   ingress {
     description     = "Allow Strapi traffic"
@@ -12,14 +12,6 @@ resource "aws_security_group" "strapi_sg_pratyush" {
     to_port         = 1337
     protocol        = "tcp"
     security_groups = [aws_security_group.alb_sg.id]
-  }
-
-  ingress {
-    description = "Allow HTTP"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {

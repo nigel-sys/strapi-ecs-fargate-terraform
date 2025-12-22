@@ -1,0 +1,24 @@
+{
+  "family": "pratyush-baxla-strapi-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::301782007642:role/pratyush-baxla-ecs-execution-role",
+  "taskRoleArn": "arn:aws:iam::301782007642:role/pratyush-baxla-ecs-task-role",
+  "containerDefinitions": [
+    {
+      "name": "strapi",
+      "image": "<IMAGE_URI>",
+      "essential": true,
+      "cpu": 512,
+      "memory": 1024,
+      "portMappings": [
+        {
+          "containerPort": 1337,
+          "protocol": "tcp"
+        }
+      ]
+    }
+  ]
+}
