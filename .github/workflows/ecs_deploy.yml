@@ -69,4 +69,4 @@ jobs:
           aws deploy create-deployment \
             --application-name $CODEDEPLOY_APP \
             --deployment-group-name $CODEDEPLOY_DG \
-            --revision revisionType=AppSpecContent,appSpecContent="$(cat appspec.yaml | sed "s|PLACEHOLDER|$TASK_DEF_ARN|")"
+            --revision revisionType=AppSpecContent,appSpecContent="$(cat appspec.yaml | sed "s|<TASK_DEFINITION_ARN>|$TASK_DEF_ARN|")"
