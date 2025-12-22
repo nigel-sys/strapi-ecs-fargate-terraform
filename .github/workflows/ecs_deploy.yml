@@ -46,6 +46,7 @@ jobs:
           STRAPI_ENCRYPTION_KEY: ${{ secrets.STRAPI_ENCRYPTION_KEY }}
 
           STRAPI_JWT_SECRET: ${{ secrets.STRAPI_JWT_SECRET }}
+          STRAPI_DATABASE_HOST: ${{ secrets.STRAPI_DATABASE_HOST }}
           STRAPI_DATABASE_PASSWORD: ${{ secrets.STRAPI_DATABASE_PASSWORD }}
         run: |
           envsubst < taskdef.json > taskdef_rendered.json
