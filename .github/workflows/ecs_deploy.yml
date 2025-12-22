@@ -58,14 +58,12 @@ jobs:
 
       - name: Create CodeDeploy revision file
         run: |
-          cat <<EOF > revision.json
-          {
-              "revisionType": "AppSpecContent",
-              "appSpecContent": {
-              "content": "$(sed 's/"/\\"/g' appspec_rendered.yaml)"
-              }
-          }
-          EOF
+          jq -Rs '{
+          revisionType: "AppSpecContent",
+          appSpecContent: {
+          content: .
+            }
+          }' appspec_rendered.yaml > revision.json
 
       - name: Debug revision file
         run: |
