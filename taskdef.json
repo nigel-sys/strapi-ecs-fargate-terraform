@@ -34,7 +34,7 @@
         { "name": "DATABASE_CLIENT", "value": "postgres" },
         {
           "name": "DATABASE_HOST",
-          "value": "aws_db_instance.strapi_db.address"
+          "value": "${DATABASE_HOST}"
         },
         { "name": "DATABASE_PORT", "value": "5432" },
         { "name": "DATABASE_NAME", "value": "postgres" },
