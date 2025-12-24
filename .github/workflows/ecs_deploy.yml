@@ -27,11 +27,11 @@ jobs:
           IMAGE_TAG=${{ github.event.workflow_run.head_sha }}
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
 
-      - name: Set variables
+      - name: Set image variables
         run: |
-          IMAGE="301782007642.dkr.ecr.ap-south-1.amazonaws.com/pratyush_baxla/strapi-app:$IMAGE_TAG"
-          echo "IMAGE_URI=$IMAGE" >> $GITHUB_ENV
-          echo "Using image: $IMAGE"
+          export IMAGE_URI ="301782007642.dkr.ecr.ap-south-1.amazonaws.com/pratyush_baxla/strapi-app:$IMAGE_TAG"
+          echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
+          echo "Using image: $IMAGE_URI"
           echo "CODEDEPLOY_APP=pratyush-strapi" >> $GITHUB_ENV
           echo "CODEDEPLOY_DG=pratyush-strapi-dg" >> $GITHUB_ENV
 
