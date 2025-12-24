@@ -26,11 +26,13 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Docker metadata (tags, labels)
+      - name: Docker metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: 301782007642.dkr.ecr.ap-south-1.amazonaws.com/pratyush_baxla/strapi-app
+          tags: |
+            type=sha,format=long
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
@@ -40,5 +42,6 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Output image_tag
-        run: echo "image_tag=${{ steps.meta.outputs.image }}" >> $GITHUB_OUTPUT
+      - name: Export image tag
+        run: |
+          echo "image_tag=${GITHUB_SHA}" >> $GITHUB_OUTPUT

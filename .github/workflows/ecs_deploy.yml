@@ -1,15 +1,14 @@
 name: Deploy Strapi to ECS Blue/Green
 
 on:
-  workflow_dispatch:
-    inputs:
-      image_tag:
-        description: 'Docker image tag to deploy'
-        required: true
-        default: 'pratyush_nigel_baxla'
+  workflow_run:
+    workflows: ['CI - Build & Push Strapi Image']
+    types:
+      - completed
 
 jobs:
   deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -23,9 +22,14 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
+      - name: Set image tag from CI
+        run: |
+          IMAGE_TAG=${{ github.event.workflow_run.head_sha }}
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+
       - name: Set variables
         run: |
-          IMAGE="301782007642.dkr.ecr.ap-south-1.amazonaws.com/pratyush_baxla/strapi-app:${{ github.event.inputs.image_tag }}"
+          IMAGE="301782007642.dkr.ecr.ap-south-1.amazonaws.com/pratyush_baxla/strapi-app:$IMAGE_TAG"
           echo "IMAGE_URI=$IMAGE" >> $GITHUB_ENV
           echo "Using image: $IMAGE"
           echo "CODEDEPLOY_APP=pratyush-strapi" >> $GITHUB_ENV
@@ -37,7 +41,7 @@ jobs:
 
       - name: Render ECS task definition
         env:
-          IMAGE: 301782007642.dkr.ecr.ap-south-1.amazonaws.com/pratyush_baxla/strapi-app:${{ github.event.inputs.image_tag }}
+          IMAGE: 301782007642.dkr.ecr.ap-south-1.amazonaws.com/pratyush_baxla/strapi-app:$IMAGE_TAG
 
           STRAPI_APP_KEYS: ${{ secrets.STRAPI_APP_KEYS }}
           STRAPI_API_TOKEN_SALT: ${{ secrets.STRAPI_API_TOKEN_SALT }}
@@ -56,11 +60,6 @@ jobs:
           cat taskdef_rendered.json
 
       - name: Register ECS task definition
-        run: |
-          aws ecs register-task-definition \
-            --cli-input-json file://taskdef_rendered.json
-
-      - name: Get Task Definition ARN
         run: |
           TASK_DEF_ARN=$(aws ecs register-task-definition \
             --cli-input-json file://taskdef_rendered.json \
@@ -88,8 +87,16 @@ jobs:
 
       - name: Deploy via CodeDeploy
         run: |
-          aws deploy create-deployment \
+          DEPLOYMENT_ID=$(aws deploy create-deployment \
             --application-name $CODEDEPLOY_APP \
             --deployment-group-name $CODEDEPLOY_DG \
             --revision file://revision.json \
-            --deployment-config-name CodeDeployDefault.ECSCanary10Percent5Minutes
+            --query "deploymentId" \
+            --output text)
+
+          echo "DEPLOYMENT_ID=$DEPLOYMENT_ID" >> $GITHUB_ENV
+
+      - name: Wait for deployment to complete
+        run: |
+          aws deploy wait deployment-successful \
+            --deployment-id $DEPLOYMENT_ID
