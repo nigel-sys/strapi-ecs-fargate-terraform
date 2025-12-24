@@ -22,26 +22,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
-      - name: Set image tag from CI
-        run: |
-          IMAGE_TAG=${{ github.event.workflow_run.head_sha }}
-          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
-
-      - name: Set image variables
-        run: |
-          export IMAGE_URI="301782007642.dkr.ecr.ap-south-1.amazonaws.com/pratyush_baxla/strapi-app:$IMAGE_TAG"
-          echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
-          echo "Using image: $IMAGE_URI"
-          echo "CODEDEPLOY_APP=pratyush-strapi" >> $GITHUB_ENV
-          echo "CODEDEPLOY_DG=pratyush-strapi-dg" >> $GITHUB_ENV
-
-      - name: Debug image URI
-        run: |
-          echo "IMAGE_URI=$IMAGE_URI"
-
       - name: Render ECS task definition
         env:
-          IMAGE_URI: ${{ env.IMAGE_URI }}
+          IMAGE_URI: 301782007642.dkr.ecr.ap-south-1.amazonaws.com/pratyush_baxla/strapi-app:${{ github.event.workflow_run.head_sha }}
 
           STRAPI_APP_KEYS: ${{ secrets.STRAPI_APP_KEYS }}
           STRAPI_API_TOKEN_SALT: ${{ secrets.STRAPI_API_TOKEN_SALT }}
